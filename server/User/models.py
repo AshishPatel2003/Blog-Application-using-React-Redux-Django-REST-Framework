@@ -1,7 +1,7 @@
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
+from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
 
-class AppUserManager(BaseUserManager):
+class UserManager(BaseUserManager):
     def _create_user(self, email, password, first_name, last_name, **extra_fields):
         if not email:
             raise ValueError('Email must be provided')
@@ -13,46 +13,58 @@ class AppUserManager(BaseUserManager):
             first_name=first_name,
             last_name=last_name,
             **extra_fields
-        )  
+        )
 
         user.set_password(password)
         user.save(using=self._db)
         return user
 
     def create_user(self, email, password, first_name, last_name, **extra_fields):
-        extra_fields.setdefault("is_staff", True)
         extra_fields.setdefault("is_active", True)
-        extra_fields.setdefault("is_superuser", False)
+        extra_fields.setdefault("is_admin", False)
         return self._create_user(email, password, first_name, last_name, **extra_fields)
 
     def create_superuser(self, email, password, first_name, last_name, **extra_fields):
-        extra_fields.setdefault("is_staff", True)
         extra_fields.setdefault("is_active", True)
-        extra_fields.setdefault("is_superuser", True)
+        extra_fields.setdefault("is_admin", True)
+
         return self._create_user(email, password, first_name, last_name, **extra_fields)
 
-
-# Create your models here.
-class User(AbstractBaseUser, PermissionsMixin):
-    # Abstract base use only has the following fields by default:
-        # 1. password
-        # 2. last_login
-        # 3. is_active
-    
-    email = models.EmailField(db_index=True, unique=True, max_length=255)
-    first_name = models.CharField(max_length=240)
-    last_name = models.CharField(max_length=240)
-    mobile = models.CharField(max_length=50)
-
-    is_staff = models.BooleanField(default=True)
+class User(AbstractBaseUser):
+    email = models.EmailField(
+        verbose_name="email",
+        max_length=255,
+        unique=True,
+    )
+    first_name = models.CharField(max_length=255)
+    last_name = models.CharField(max_length=255)
     is_active = models.BooleanField(default=True)
-    is_superuser = models.BooleanField(default=False)
+    is_admin = models.BooleanField(default=False)
 
-    objects = AppUserManager()
+    objects = UserManager()
 
     USERNAME_FIELD = "email"
-    REQUIRED_FIELDS = ['first_name', 'last_name']
-
+    REQUIRED_FIELDS = ["first_name", "last_name"]
+    
     class Meta:
         verbose_name = "User"
         verbose_name_plural = "Users"
+
+    def __str__(self):
+        return self.email
+
+    def has_perm(self, perm, obj=None):
+        "Does the user have a specific permission?"
+        # Simplest possible answer: Yes, always
+        return self.is_admin
+
+    def has_module_perms(self, app_label):
+        "Does the user have permissions to view the app `app_label`?"
+        # Simplest possible answer: Yes, always
+        return True
+    @property
+    def is_staff(self):
+        "Is the user a member of staff?"
+        # Simplest possible answer: All admins are staff
+        return self.is_admin
+ 
