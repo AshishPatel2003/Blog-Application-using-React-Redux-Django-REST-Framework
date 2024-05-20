@@ -8,6 +8,7 @@ import SignUp from "./pages/SignUp";
 import SignIn from "./pages/SignIn";
 import Dashboard from "./pages/Dashboard";
 import Projects from "./pages/Projects";
+import FooterComponent from "./components/Footer";
 
 function App() {
 	return (
@@ -21,6 +22,7 @@ function App() {
 				<Route path="/projects" element={<Projects />} />
 				<Route path="/dashboard" element={<Dashboard />} />
 			</Routes>
+			<FooterComponent />
 		</BrowserRouter>
 	);
 }
