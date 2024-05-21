@@ -1,13 +1,16 @@
 import { Alert, Button, Label, Spinner, TextInput } from "flowbite-react";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { signInStart, signInSuccess, signInFailure } from "../redux/user/userSlice";
 
 function SignUp() {
 	const [formData, setFormData] = useState({});
 	const [errorMessage, setErrorMessage] = useState("");
-  const [loading, setLoading] = useState(false);
+	const [loading, setLoading] = useState(false)
 
-  const navigate = useNavigate();
+	const dispatch = useDispatch();
+	const navigate = useNavigate();
 
 	const handleForm = (e) => {
 		setFormData({ ...formData, [e.target.id]: e.target.value.trim() });
@@ -15,7 +18,7 @@ function SignUp() {
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-    setLoading(true);
+		setLoading(true);
 		if (
 			!formData.first_name ||
 			!formData.last_name ||
@@ -23,7 +26,7 @@ function SignUp() {
 			!formData.password
 		) {
 			setErrorMessage("All Field are required...");
-      setLoading(false)
+			setLoading(false);
 		} else {
 			try {
 				const res = await fetch(
@@ -38,7 +41,7 @@ function SignUp() {
 				console.log(data);
 				if (data.type && data.type == "success") {
 					console.log(data);
-          navigate('/sign-in')
+					navigate("/sign-in");
 				} else if (data.type == "error") {
 					setErrorMessage(data.message);
 				} else {
@@ -50,16 +53,16 @@ function SignUp() {
 						break;
 					}
 				}
-        setLoading(false);
+				setLoading(false);
 			} catch (error) {
 				console.error(error);
-        setLoading(false);
+				setLoading(false);
 			}
 		}
-    setTimeout(()=>{
-      console.log("5sec")
-      setErrorMessage("");
-    }, 5000)
+		setTimeout(() => {
+			console.log("5sec");
+			setErrorMessage("");
+		}, 5000);
 	};
 
 	return (
@@ -131,14 +134,19 @@ function SignUp() {
 								onChange={handleForm}
 							/>
 						</div>
-						<Button gradientDuoTone={"purpleToPink"} disabled={loading} type="submit">
-              {
-                loading ? <>
-                <Spinner />
-                <span className="pl-3">Loading... </span>
-                </> : 
-							'Sign UP'
-              }
+						<Button
+							gradientDuoTone={"purpleToPink"}
+							disabled={loading}
+							type="submit"
+						>
+							{loading ? (
+								<>
+									<Spinner />
+									<span className="pl-3">Loading... </span>
+								</>
+							) : (
+								"Sign UP"
+							)}
 						</Button>
 					</form>
 					<div className="flex gap-2 text-sm mt-5">

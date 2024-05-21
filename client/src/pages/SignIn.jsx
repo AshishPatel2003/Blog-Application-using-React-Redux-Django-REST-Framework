@@ -1,13 +1,20 @@
 import { Alert, Button, Label, Spinner, TextInput } from "flowbite-react";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import {
+	signInStart,
+	signInSuccess,
+	signInFailure,
+	clearError,
+} from "../redux/user/userSlice";
 
 function SignIn() {
 	const [formData, setFormData] = useState({});
-	const [errorMessage, setErrorMessage] = useState("");
-  const [loading, setLoading] = useState(false);
+	const { loading, error: errorMessage } = useSelector((state) => state.user);
 
-  const navigate = useNavigate();
+	const navigate = useNavigate();
+	const dispatch = useDispatch();
 
 	const handleForm = (e) => {
 		setFormData({ ...formData, [e.target.id]: e.target.value.trim() });
@@ -15,13 +22,9 @@ function SignIn() {
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-    setLoading(true);
-		if (
-			!formData.email ||
-			!formData.password
-		) {
-			setErrorMessage("All Field are required...");
-      setLoading(false)
+		dispatch(signInStart());
+		if (!formData.email || !formData.password) {
+			dispatch(signInFailure("All Fields are required"));
 		} else {
 			try {
 				const res = await fetch(
@@ -35,29 +38,29 @@ function SignIn() {
 				const data = await res.json();
 				console.log(data);
 				if (data.type && data.type == "success") {
-					console.log(data);
-          navigate('/')
+					dispatch(signInSuccess(data.token));
+					navigate("/");
 				} else if (data.type == "error") {
-					setErrorMessage(data.message);
+					console.log(data.message);
+					dispatch(signInFailure(data.message));
 				} else {
 					for (let i in data) {
 						for (let j of data[i]) {
-							setErrorMessage(j);
 							console.log(j);
+							dispatch(signInFailure(j));
 						}
 						break;
 					}
 				}
-        setLoading(false);
 			} catch (error) {
-				console.error(error);
-        setLoading(false);
+				console.log(error.message);
+				dispatch(signInFailure(error.message));
 			}
 		}
-    setTimeout(()=>{
-      console.log("5sec")
-      setErrorMessage("");
-    }, 5000)
+		setTimeout(() => {
+			console.log("5sec");
+			dispatch(clearError(false));
+		}, 5000);
 	};
 
 	return (
@@ -105,14 +108,19 @@ function SignIn() {
 								onChange={handleForm}
 							/>
 						</div>
-						<Button gradientDuoTone={"purpleToPink"} disabled={loading} type="submit">
-              {
-                loading ? <>
-                <Spinner />
-                <span className="pl-3">Loading... </span>
-                </> : 
-							'Sign UP'
-              }
+						<Button
+							gradientDuoTone={"purpleToPink"}
+							disabled={loading}
+							type="submit"
+						>
+							{loading ? (
+								<>
+									<Spinner />
+									<span className="pl-3">Loading... </span>
+								</>
+							) : (
+								"Sign UP"
+							)}
 						</Button>
 					</form>
 					<div className="flex gap-2 text-sm mt-5">

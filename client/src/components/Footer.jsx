@@ -28,13 +28,12 @@ function FooterComponent() {
 							&nbsp;All
 						</Link>
 					</div>
-					<div className=" grid grid-cols-2 gap-8 sm:mt-4 sm:grid-cols-3 sm:gap-6 ">
+					<div className=" grid grid-cols-2 gap-8 sm:mt-4 sm:grid-cols-3 sm:gap-6 mt-5">
 						<div>
 							<Footer.Title title="About" />
 							<Footer.LinkGroup col>
 								<Footer.Link
 									target="_blank"
-									ƒ
 									href=""
 									rel="noopener noreferrer"
 								>
@@ -42,7 +41,6 @@ function FooterComponent() {
 								</Footer.Link>
 								<Footer.Link
 									target="_blank"
-									ƒ
 									href=""
 									rel="noopener noreferrer"
 								>
@@ -50,7 +48,6 @@ function FooterComponent() {
 								</Footer.Link>
 								<Footer.Link
 									target="_blank"
-									ƒ
 									href=""
 									rel="noopener noreferrer"
 								>
@@ -63,7 +60,6 @@ function FooterComponent() {
 							<Footer.LinkGroup col>
 								<Footer.Link
 									target="_blank"
-									ƒ
 									href=""
 									rel="noopener noreferrer"
 								>
@@ -71,7 +67,6 @@ function FooterComponent() {
 								</Footer.Link>
 								<Footer.Link
 									target="_blank"
-									ƒ
 									href=""
 									rel="noopener noreferrer"
 								>
@@ -84,7 +79,6 @@ function FooterComponent() {
 							<Footer.LinkGroup col>
 								<Footer.Link
 									target="_blank"
-									ƒ
 									href=""
 									rel="noopener noreferrer"
 								>
@@ -92,7 +86,6 @@ function FooterComponent() {
 								</Footer.Link>
 								<Footer.Link
 									target="_blank"
-									ƒ
 									href=""
 									rel="noopener noreferrer"
 								>
@@ -105,16 +98,16 @@ function FooterComponent() {
 				<Footer.Divider />
 				<div className="w-full sm:flex  sm:items-center sm:justify-between">
 					<Footer.Copyright
-						href="#"
+						href="/"
 						by="Ashish's Blog"
 						year={new Date().getFullYear()}
 					/>
 					<div className="flex gap-6 sm:mt-0 mt-4 sm:justify-center">
-						<Footer.Icon href="#" icon={BsFacebook} />
-						<Footer.Icon href="#" icon={BsInstagram} />
-						<Footer.Icon href="#" icon={BsTwitter} />
-						<Footer.Icon href="#" icon={BsGithub} />
-						<Footer.Icon href="#" icon={BsDribbble} />
+						<Footer.Icon href="/" icon={BsFacebook} />
+						<Footer.Icon href="/" icon={BsInstagram} />
+						<Footer.Icon href="/" icon={BsTwitter} />
+						<Footer.Icon href="/" icon={BsGithub} />
+						<Footer.Icon href="/" icon={BsDribbble} />
 					</div>
 				</div>
 			</div>
