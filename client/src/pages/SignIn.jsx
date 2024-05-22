@@ -7,7 +7,9 @@ import {
 	signInSuccess,
 	signInFailure,
 	clearError,
+	setAccessToken
 } from "../redux/user/userSlice";
+import OAuth from "../components/OAuth";
 
 function SignIn() {
 	const [formData, setFormData] = useState({});
@@ -35,10 +37,12 @@ function SignIn() {
 						body: JSON.stringify(formData),
 					}
 				);
+	
 				const data = await res.json();
 				console.log(data);
 				if (data.type && data.type == "success") {
-					dispatch(signInSuccess(data.token));
+					dispatch(signInSuccess(data.user));
+					dispatch(setAccessToken(data.token))
 					navigate("/");
 				} else if (data.type == "error") {
 					console.log(data.message);
@@ -122,6 +126,7 @@ function SignIn() {
 								"Sign UP"
 							)}
 						</Button>
+						<OAuth />
 					</form>
 					<div className="flex gap-2 text-sm mt-5">
 						<span>Don&apos;t have an Account?</span>
