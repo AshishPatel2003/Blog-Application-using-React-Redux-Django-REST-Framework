@@ -4,7 +4,7 @@ from User.models import User
 class UserInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['first_name', 'last_name', 'email', 'photoURL']
+        fields = ['id', 'first_name', 'last_name', 'email', 'photoURL']
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
     class Meta:

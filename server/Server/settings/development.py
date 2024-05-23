@@ -3,6 +3,8 @@ from .base import *
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
+ALLOWED_HOSTS = ['*']
+
 DATABASES = {
     # 'default': {
     #     'ENGINE': 'django.db.backends.sqlite3',
