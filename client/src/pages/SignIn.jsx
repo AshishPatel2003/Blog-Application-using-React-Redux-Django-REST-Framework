@@ -37,7 +37,7 @@ function SignIn() {
 						body: JSON.stringify(formData),
 					}
 				);
-	
+
 				const data = await res.json();
 				console.log(data);
 				if (data.type && data.type == "success") {

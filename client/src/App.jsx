@@ -9,8 +9,11 @@ import SignIn from "./pages/SignIn";
 import Dashboard from "./pages/Dashboard";
 import Projects from "./pages/Projects";
 import FooterComponent from "./components/Footer";
+import { useSelector } from "react-redux";
 
 function App() {
+	const { theme } =  useSelector(state=> state.theme)
+	console.log(theme)
 	return (
 		<BrowserRouter>
 			<Header />
