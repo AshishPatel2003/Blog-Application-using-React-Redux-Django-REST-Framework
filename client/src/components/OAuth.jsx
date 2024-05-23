@@ -23,7 +23,7 @@ function OAuth() {
                 },
                 body: JSON.stringify({
                     first_name: resultsFromGoogle.user.displayName.split(' ').splice(0, resultsFromGoogle.user.displayName.split(' ').length - 1).join(' '),
-                    last_name: resultsFromGoogle.user.displayName.split(' ')[1],
+                    last_name: resultsFromGoogle.user.displayName.split(' ')[resultsFromGoogle.user.displayName.split(' ').length-1],
                     email: resultsFromGoogle.user.email,
                     password: Math.random().toString(36).slice(-8),
                     photoURL: resultsFromGoogle.user.photoURL
