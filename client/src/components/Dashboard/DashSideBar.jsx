@@ -14,6 +14,7 @@ function DashSideBar({ tab }) {
 							icon={HiUser}
 							label={"User"}
 							labelColor={"dark"}
+              as={"div"}
 						>
 							Profile
 						</Sidebar.Item>
@@ -23,6 +24,7 @@ function DashSideBar({ tab }) {
 							active={tab === "signout"}
 							icon={HiArrowSmRight}
 							labelColor={"dark"}
+              as={"div"}
 							className="cursor-pointer"
 						>
 							Sign out
