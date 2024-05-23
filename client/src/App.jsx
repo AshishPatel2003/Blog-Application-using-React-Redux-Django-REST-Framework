@@ -10,9 +10,10 @@ import Dashboard from "./pages/Dashboard";
 import Projects from "./pages/Projects";
 import FooterComponent from "./components/Footer";
 import { useSelector } from "react-redux";
+import PrivateRoute from "./components/PrivateRoute";
 
 function App() {
-	const { theme } =  useSelector(state=> state.theme)
+	const { theme } = useSelector(state => state.theme)
 	console.log(theme)
 	return (
 		<BrowserRouter>
@@ -23,7 +24,9 @@ function App() {
 				<Route path="/sign-up" element={<SignUp />} />
 				<Route path="/sign-in" element={<SignIn />} />
 				<Route path="/projects" element={<Projects />} />
-				<Route path="/dashboard" element={<Dashboard />} />
+				<Route element={<PrivateRoute />} >
+					<Route path="/dashboard" element={<Dashboard />} />
+				</Route>
 			</Routes>
 			<FooterComponent />
 		</BrowserRouter>
