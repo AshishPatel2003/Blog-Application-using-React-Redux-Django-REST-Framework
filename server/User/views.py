@@ -3,7 +3,7 @@ from rest_framework.generics import UpdateAPIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth import authenticate
-from User.serializers import UserRegistrationSerializer, UserLoginSerializer, UserGoogleAuthSerializer, UserInfoSerializer, UserProfileUpdateSerializer
+from User.serializers import UserRegistrationSerializer, UserLoginSerializer, UserGoogleAuthSerializer, UserInfoSerializer, UserProfileUpdateSerializer, UserDeleteSerializer
 from User.renderers import UserRenderer
 from rest_framework_simplejwt.tokens import RefreshToken
 from User.models import User
@@ -94,4 +94,14 @@ class UserProfileUpdateAPI(APIView):
             user_info = UserInfoSerializer(update_user).data
             return Response({'type': 'success', 'message': "Profile updated successfully", 'user': user_info}, status=status.HTTP_200_OK)
         return Response({'type': 'error', 'message': "Profile updated failed"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+class UserDeleteAPI(APIView):
+    def delete(self, request, id):
+        try:
+            user = User.objects.get(id=id)
+            serializer = UserDeleteSerializer()
+            serializer.delete(user)
+            return Response({'type': 'success', 'message': "User deleted successfully", 'user': user}, status=status.HTTP_200_OK)
+        except User.DoesNotExist:
+            return Response({'type': 'success', 'message': "User Not found"}, status=status.HTTP_404_NOT_FOUND)
         

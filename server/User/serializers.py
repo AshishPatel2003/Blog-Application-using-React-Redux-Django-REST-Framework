@@ -35,42 +35,50 @@ class UserGoogleAuthSerializer(serializers.ModelSerializer):
         return User.objects.create_user(**validated_data)
 
 class UserProfileUpdateSerializer(serializers.ModelSerializer):
+    first_name = serializers.CharField(max_length=255, required=False)
+    last_name = serializers.CharField(max_length=255, required=False)
+    email = serializers.EmailField(max_length=255, required=False)
+    password = serializers.CharField(max_length=511, required=False)
+    photoURL = serializers.CharField(max_length=255, required=False)
+    
     class Meta:
         model = User
         fields = ['first_name', 'last_name', 'email', 'password', 'photoURL']
-        extra_kwargs = {
-            'password': {'write_only': True, 'required': False},
-            'email': {'required': False},
-            'first_name': {'required': False},
-            'last_name': {'required': False},
-            'photoURL': {'required': False}
-        }
     
     def update(self, instance, validated_data):
-        # Update first_name if provided
-        if 'first_name' in validated_data:
-            instance.first_name = validated_data['first_name'].strip()
-        
-        # Update last_name if provided
-        if 'last_name' in validated_data:
-            instance.last_name = validated_data['last_name'].strip()
+        first_name = validated_data.get('first_name')
+        last_name = validated_data.get('last_name')
+        email = validated_data.get('email')
+        password = validated_data.get('password')
+        photoURL = validated_data.get('photoURL')
 
-        # Update email if provided and valid
-        if 'email' in validated_data:
-            email = validated_data['email'].strip()
+        if (first_name):
+            instance.first_name = first_name.strip()
+        
+        if (last_name):
+            instance.last_name = last_name.strip()
+
+        if (email):
             try:
                 validate_email(email)
-                instance.email = email
+                instance.email = email.strip()
             except DjangoValidationError:
-                raise serializers.ValidationError({"email": "Invalid email format"})
+                pass
+
         
-        # Update password if provided
-        if 'password' in validated_data:
-            instance.password = make_password(validated_data['password'].strip())
+        if (password):
+            instance.password = make_password(password.strip())
         
-        # Update photoURL if provided
-        if 'photoURL' in validated_data:
-            instance.photoURL = validated_data['photoURL'].strip()
+        if (photoURL):
+            instance.photoURL = photoURL.strip()
 
         instance.save()
+        return instance
+    
+class UserDeleteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+    
+    def delete(self, instance):
+        instance.delete()
         return instance
