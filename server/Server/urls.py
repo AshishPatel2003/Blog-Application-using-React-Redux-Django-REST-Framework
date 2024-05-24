@@ -23,5 +23,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/user/register', user_views.UserRegisterAPI.as_view()),
     path('api/user/login', user_views.UserLoginAPI.as_view()),
-    path('api/user/google', user_views.UserGoogleAuthAPI.as_view())
+    path('api/user/google', user_views.UserGoogleAuthAPI.as_view()),
+    path('api/user/<int:id>/update', user_views.UserProfileUpdateAPI.as_view()),
 ]

@@ -1,8 +1,9 @@
 from rest_framework.views import APIView
+from rest_framework.generics import UpdateAPIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth import authenticate
-from User.serializers import UserRegistrationSerializer, UserLoginSerializer, UserGoogleAuthSerializer, UserInfoSerializer
+from User.serializers import UserRegistrationSerializer, UserLoginSerializer, UserGoogleAuthSerializer, UserInfoSerializer, UserProfileUpdateSerializer
 from User.renderers import UserRenderer
 from rest_framework_simplejwt.tokens import RefreshToken
 from User.models import User
@@ -79,4 +80,18 @@ class UserGoogleAuthAPI(APIView):
                 return Response({'type': 'success', 'message': 'Registration Complete', 'user': user_info}, status=status.HTTP_200_OK)
             except Exception as e:
                 return Response({'type': 'error', 'message': e}, status=status.HTTP_404_NOT_FOUND)
-    
+
+class UserProfileUpdateAPI(APIView):
+    def put(self, request, id):
+        try:
+            user = User.objects.get(pk=id)
+        except User.DoesNotExist:
+            return Response({'type': 'error', 'message': "User Not Found"})
+
+        serializer = UserProfileUpdateSerializer(user, data = request.data, partial=True)
+        if (serializer.is_valid()):
+            update_user = serializer.save()
+            user_info = UserInfoSerializer(update_user).data
+            return Response({'type': 'success', 'message': "Profile updated successfully", 'user': user_info}, status=status.HTTP_200_OK)
+        return Response({'type': 'error', 'message': "Profile updated failed"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
