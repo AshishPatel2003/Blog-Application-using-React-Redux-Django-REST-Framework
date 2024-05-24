@@ -92,6 +92,8 @@ function DashProfile() {
 
 	const handleUpdateSubmit = async (e) => {
 		e.preventDefault();
+		console.log(typeof accessToken)
+		console.log(accessToken)
 		if (Object.keys(formData).length == 0) {
 			return;
 		}
@@ -108,7 +110,7 @@ function DashProfile() {
 					method: "PUT",
 					headers: {
 						"Content-Type": "application/json",
-						Authorization: accessToken,
+						"Authorization": "Bearer " + accessToken.access,
 					},
 					body: JSON.stringify(formData),
 				}
@@ -140,7 +142,7 @@ function DashProfile() {
 					method: "DELETE",
 					headers: {
 						"Content-Type": "application/json",
-						Authorization: accessToken,
+						Authorization: "Bearer " + accessToken.access,
 					},
 				}
 			);
@@ -245,7 +247,7 @@ function DashProfile() {
 				<span className="cursor-pointer" onClick={() => {dispatch(signOut())}}>Sign Out</span>
 			</div>
 			{updateSuccessMessage && (
-				<Alert color={"success"}>{updateSuccessMessage}</Alert>
+				<Alert color={"success"} className="my-5">{updateSuccessMessage}</Alert>
 			)}
 			<Modal
 				show={showModal}

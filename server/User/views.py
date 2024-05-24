@@ -3,10 +3,13 @@ from rest_framework.generics import UpdateAPIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth import authenticate
+from User.decorators import authenticate_user
+from User.permissions import IsOwner
 from User.serializers import UserRegistrationSerializer, UserLoginSerializer, UserGoogleAuthSerializer, UserInfoSerializer, UserProfileUpdateSerializer, UserDeleteSerializer
 from User.renderers import UserRenderer
 from rest_framework_simplejwt.tokens import RefreshToken
 from User.models import User
+from rest_framework.permissions import IsAuthenticated
 
 
 
@@ -82,6 +85,10 @@ class UserGoogleAuthAPI(APIView):
                 return Response({'type': 'error', 'message': e}, status=status.HTTP_404_NOT_FOUND)
 
 class UserProfileUpdateAPI(APIView):
+    renderer_classes = [UserRenderer]
+    permission_classes = [IsAuthenticated, IsOwner]
+
+    # @authenticate_user
     def put(self, request, id):
         try:
             user = User.objects.get(pk=id)
@@ -96,6 +103,9 @@ class UserProfileUpdateAPI(APIView):
         return Response({'type': 'error', 'message': "Profile updated failed"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class UserDeleteAPI(APIView):
+    renderer_classes = [UserRenderer]
+    permission_classes = [IsAuthenticated, IsOwner]
+    
     def delete(self, request, id):
         try:
             user = User.objects.get(id=id)

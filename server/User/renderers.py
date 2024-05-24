@@ -12,7 +12,11 @@ class UserRenderer(renderers.JSONRenderer):
             message = ''
             data = dict(data)
             for i in data.items():
-                message=i[1][0]
+                print(i)
+                if (isinstance(i[1], list)):
+                    message = i[1][0]
+                else:
+                    message=i[1]
                 break
             response = json.dumps({'type': 'error', 'message': message})
         else:
