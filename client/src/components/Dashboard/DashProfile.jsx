@@ -14,6 +14,7 @@ import {
 	deleteFailure,
 	deleteStart,
 	deleteSuccess,
+	signOut,
 	updateFailure,
 	updateStart,
 	updateSuccess,
@@ -47,6 +48,7 @@ function DashProfile() {
 		if (imageFile) {
 			uploadImage();
 		}
+	// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [imageFile]);
 
 	const uploadImage = async () => {
@@ -240,7 +242,7 @@ function DashProfile() {
 				>
 					Delete Account
 				</span>
-				<span className="cursor-pointer">Sign Out</span>
+				<span className="cursor-pointer" onClick={() => {dispatch(signOut())}}>Sign Out</span>
 			</div>
 			{updateSuccessMessage && (
 				<Alert color={"success"}>{updateSuccessMessage}</Alert>
@@ -263,7 +265,7 @@ function DashProfile() {
 								color={"failure"}
 								onClick={handleDeleteUser}
 							>
-								Yes, I'm sure
+								Yes, I&apos;m sure
 							</Button>
 							<Button
 								color={"gray"}

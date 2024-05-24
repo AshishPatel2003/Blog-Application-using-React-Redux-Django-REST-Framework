@@ -1,9 +1,12 @@
 import { Sidebar } from "flowbite-react";
 import { HiArrowSmRight, HiUser } from "react-icons/hi";
+import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
+import { signOut } from "../../redux/user/userSlice";
 
 // eslint-disable-next-line react/prop-types
 function DashSideBar({ tab }) {
+	const dispatch = useDispatch();
 	return (
 		<Sidebar className="w-full md:w-56">
 			<Sidebar.Items>
@@ -14,7 +17,7 @@ function DashSideBar({ tab }) {
 							icon={HiUser}
 							label={"User"}
 							labelColor={"dark"}
-              as={"div"}
+							as={"div"}
 						>
 							Profile
 						</Sidebar.Item>
@@ -24,7 +27,8 @@ function DashSideBar({ tab }) {
 							active={tab === "signout"}
 							icon={HiArrowSmRight}
 							labelColor={"dark"}
-              as={"div"}
+							as={"div"}
+							onClick={() => {dispatch(signOut())}}
 							className="cursor-pointer"
 						>
 							Sign out
