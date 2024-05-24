@@ -101,7 +101,10 @@ class UserDeleteAPI(APIView):
             user = User.objects.get(id=id)
             serializer = UserDeleteSerializer()
             serializer.delete(user)
-            return Response({'type': 'success', 'message': "User deleted successfully", 'user': user}, status=status.HTTP_200_OK)
+            return Response({'type': 'success', 'message': "User deleted successfully"}, status=status.HTTP_200_OK)
         except User.DoesNotExist:
             return Response({'type': 'success', 'message': "User Not found"}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({'type': 'error', 'message': "Internal Server Error"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
         
