@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework',
     'rest_framework_simplejwt',
-    'User'
+    'User',
+    'Post'
 ]
 
 AUTH_USER_MODEL = 'User.User'

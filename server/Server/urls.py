@@ -18,12 +18,19 @@ from django.contrib import admin
 from django.urls import path
 
 from User import views as user_views
+from Post import views as post_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+
+    # -------- User Routes --------
     path('api/user/register', user_views.UserRegisterAPI.as_view()),
     path('api/user/login', user_views.UserLoginAPI.as_view()),
     path('api/user/google', user_views.UserGoogleAuthAPI.as_view()),
     path('api/user/<int:id>/update', user_views.UserProfileUpdateAPI.as_view()),
     path('api/user/<int:id>/delete', user_views.UserDeleteAPI.as_view()),
+
+    # -------- Post Routes --------
+    path('api/post/create', post_views.PostCreateAPI.as_view())
+
 ]

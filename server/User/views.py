@@ -1,9 +1,7 @@
 from rest_framework.views import APIView
-from rest_framework.generics import UpdateAPIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth import authenticate
-from User.decorators import authenticate_user
 from User.permissions import IsOwner
 from User.serializers import UserRegistrationSerializer, UserLoginSerializer, UserGoogleAuthSerializer, UserInfoSerializer, UserProfileUpdateSerializer, UserDeleteSerializer
 from User.renderers import UserRenderer
@@ -15,7 +13,8 @@ from rest_framework.permissions import IsAuthenticated
 
 def get_tokens_for_user(user):
     refresh = RefreshToken.for_user(user)
-
+    refresh['is_dmin'] = user.is_admin
+    print("Token Fetched => ", refresh.payload.items())
     return {
         'refresh': str(refresh),
         'access': str(refresh.access_token),
@@ -33,7 +32,7 @@ class UserRegisterAPI(APIView):
             return Response({'type': 'success', 'message': 'Registration was successful.'}, status=status.HTTP_201_CREATED)
         return Response({
             'type': "error",
-            'message': "User registered successfully",
+            'message': "Bad Request",
         }, status=status.HTTP_400_BAD_REQUEST)
     
 class UserLoginAPI(APIView):
