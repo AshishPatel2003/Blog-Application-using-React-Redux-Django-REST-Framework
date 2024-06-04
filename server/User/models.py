@@ -41,6 +41,8 @@ class User(AbstractBaseUser):
     photoURL = models.TextField(default="https://i0.wp.com/www.repol.copl.ulaval.ca/wp-content/uploads/2019/01/default-user-icon.jpg")
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     objects = UserManager()
 

@@ -7,7 +7,7 @@ from django.core.exceptions import ValidationError as DjangoValidationError
 class UserInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'first_name', 'last_name', 'email', 'photoURL', 'is_admin']
+        fields = ['id', 'first_name', 'last_name', 'email', 'photoURL', 'is_admin', 'created_at', 'updated_at']
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
     class Meta:

@@ -123,14 +123,14 @@ function SignIn() {
 									<span className="pl-3">Loading... </span>
 								</>
 							) : (
-								"Sign UP"
+								"Sign In"
 							)}
 						</Button>
 						<OAuth />
 					</form>
 					<div className="flex gap-2 text-sm mt-5">
 						<span>Don&apos;t have an Account?</span>
-						<Link to="/sign-in" className="text-blue-500">
+						<Link to="/sign-up" className="text-blue-500">
 							Sign Up
 						</Link>
 					</div>

@@ -29,6 +29,7 @@ urlpatterns = [
     path('api/user/google', user_views.UserGoogleAuthAPI.as_view()),
     path('api/user/<int:id>/update', user_views.UserProfileUpdateAPI.as_view()),
     path('api/user/<int:id>/delete', user_views.UserDeleteAPI.as_view()),
+    path('api/users', user_views.UsersAPI.as_view()),
 
     # -------- Post Routes --------
     path('api/user/<int:id>/posts', post_views.PostsAPI.as_view()),

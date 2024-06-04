@@ -1,33 +1,33 @@
 import { Button, Modal, Table } from "flowbite-react";
 import { useEffect, useState } from "react";
+import { FaCheck, FaTimes } from "react-icons/fa";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
 
-function DashPosts() {
+function DashUsers() {
 	const { currentUser, accessToken } = useSelector((state) => state.user);
-	const [userPosts, setUserPosts] = useState([]);
+	const [users, setUsers] = useState([]);
 	const [showMore, setShowMore] = useState(true);
 	const [page, setPage] = useState(1);
 	const [showModal, setShowModal] = useState(false);
-	const [deletePostId, setDeletePostId] = useState(false);
+	const [deleteUserId, setDeleteUserId] = useState(false);
 	const limit = 3;
 
 	useEffect(() => {
-		console.log(userPosts);
-	}, [userPosts]);
+		console.log(users);
+	}, [users]);
 
 	useEffect(() => {
-		const fetchPosts = async () => {
+		const fetchUsers = async () => {
 			try {
 				const res = await fetch(
 					import.meta.env.VITE_SERVER_URL +
-						`/api/user/${currentUser.id}/posts?page=${page}&limit=${limit}`
+						`/api/users?page=${page}&limit=${limit}`
 				);
 				const data = await res.json();
 				if (res.ok) {
-					setUserPosts(data.data.all_posts);
-					if (data.data.all_posts.length < limit) {
+					setUsers(data.data.all_users);
+					if (data.data.all_users.length < limit) {
 						setShowMore(false);
 					}
 				}
@@ -35,7 +35,7 @@ function DashPosts() {
 				console.log(error.message);
 			}
 		};
-		fetchPosts();
+		fetchUsers();
 	}, [currentUser.id]);
 
 	const handleShowMore = async () => {
@@ -44,7 +44,7 @@ function DashPosts() {
 		try {
 			const res = await fetch(
 				import.meta.env.VITE_SERVER_URL +
-					`/api/${currentUser.id}/posts?page=${startIndex}&limit=${limit}`,
+					`/api/users?page=${startIndex}&limit=${limit}`,
 				{
 					method: "GET",
 					headers: {
@@ -57,8 +57,8 @@ function DashPosts() {
 			const data = await res.json();
 
 			if (res.ok) {
-				setUserPosts((prev) => [...prev, ...data.data.all_posts]);
-				if (data.data.all_posts.length < limit) {
+				setUsers((prev) => [...prev, ...data.data.all_users]);
+				if (data.data.all_users.length < limit) {
 					setShowMore(false);
 				}
 				console.log(startIndex);
@@ -69,12 +69,12 @@ function DashPosts() {
 		}
 	};
 
-	const handleDeletePost = async () => {
+	const handleDeleteUser = async () => {
 		setShowModal(false);
 		try {
 			const res = await fetch(
 				import.meta.env.VITE_SERVER_URL +
-					`/api/user/${currentUser.id}/post/${deletePostId}`,
+					`/api/user/${deleteUserId}/delete`,
 				{
 					method: "DELETE",
 					headers: {
@@ -87,7 +87,7 @@ function DashPosts() {
 			const data = await res.json();
 			console.log(data);
 			if (res.ok) {
-				setUserPosts((posts) => posts.filter((post) => post.id !== deletePostId));
+				setUsers((users) => users.filter((user) => user.id !== deleteUserId));
 			}
 		} catch (error) {
 			console.log(error.message);
@@ -96,64 +96,49 @@ function DashPosts() {
 
 	return (
 		<div className="table-auto overflow-x-scroll md:mx-auto p-3 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-300">
-			{currentUser.is_admin && userPosts?.length > 0 ? (
+			{currentUser.is_admin && users?.length > 0 ? (
 				<>
 					<Table hoverable className="shadow-md">
 						<Table.Head>
-							<Table.HeadCell>Date Updated</Table.HeadCell>
-							<Table.HeadCell>Post Image</Table.HeadCell>
-							<Table.HeadCell>Post Title</Table.HeadCell>
-							<Table.HeadCell>Category</Table.HeadCell>
+							<Table.HeadCell>Date Created</Table.HeadCell>
+							<Table.HeadCell>User Image</Table.HeadCell>
+							<Table.HeadCell>Name</Table.HeadCell>
+							<Table.HeadCell>Email</Table.HeadCell>
+							<Table.HeadCell>Admin</Table.HeadCell>
 							<Table.HeadCell>Delete</Table.HeadCell>
-							<Table.HeadCell>
-								<span>Edit</span>
-							</Table.HeadCell>
 						</Table.Head>
 						<Table.Body className="divide-y">
-							{userPosts.map((post) => (
+							{users.map((user) => (
 								// eslint-disable-next-line react/jsx-key
-								<Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800" key={post.id}>
+								<Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800" key={user.id}>
 									<Table.Cell>
 										{new Date(
-											post.updated_at
+											user.created_at
 										).toLocaleDateString()}
 									</Table.Cell>
 									<Table.Cell>
-										<Link to={`/posts/${post.slug}`}>
 											<img
-												src={post.image}
-												alt={post.title}
-												className="w-20 h-10 object-cover bg-gray-500"
+												src={user.photoURL}
+												alt={user.first_name}
+												className="w-10 h-10  m-auto object-cover bg-gray-500 rounded-full"
 											/>
-										</Link>
 									</Table.Cell>
 									<Table.Cell>
-										<Link
-											to={`/posts/${post.slug}`}
-											className="font-medium text-gray-900 dark:text-white"
-										>
-											{post.title}
-										</Link>
+											{user.first_name + " " + user.last_name}
 									</Table.Cell>
-									<Table.Cell>{post.category}</Table.Cell>
+									<Table.Cell>{user.email}
+									</Table.Cell>
+									<Table.Cell>{user.is_admin ? (<FaCheck className="text-green-500" />) : (<FaTimes className="text-red-500" />)}</Table.Cell>
 									<Table.Cell>
 										<span
 											className="font-medium text-red-500 hover:underline cursor-pointer"
 											onClick={() => {
-												setDeletePostId(post.id);
+												setDeleteUserId(user.id);
 												setShowModal(true);
 											}}
 										>
 											Delete
 										</span>
-									</Table.Cell>
-									<Table.Cell>
-										<Link
-											className="text-teal-500 hover:underline"
-											to={`/update-post/${post.id}`}
-										>
-											<span>Edit</span>
-										</Link>
 									</Table.Cell>
 								</Table.Row>
 							))}
@@ -169,7 +154,7 @@ function DashPosts() {
 					)}
 				</>
 			) : (
-				<p>You have no posts yet!</p>
+				<p>You have no users yet!</p>
 			)}
 			<Modal
 				show={showModal}
@@ -187,7 +172,7 @@ function DashPosts() {
 						<div className="flex justify-center gap-4">
 							<Button
 								color={"failure"}
-								onClick={handleDeletePost}
+								onClick={handleDeleteUser}
 							>
 								Yes, I&apos;m sure
 							</Button>
@@ -205,4 +190,4 @@ function DashPosts() {
 	);
 }
 
-export default DashPosts;
+export default DashUsers;

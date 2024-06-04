@@ -2,24 +2,82 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth import authenticate
-from User.permissions import IsOwner
+from User.permissions import IsAdmin, IsOwner
 from User.serializers import UserRegistrationSerializer, UserLoginSerializer, UserGoogleAuthSerializer, UserInfoSerializer, UserProfileUpdateSerializer, UserDeleteSerializer
 from User.renderers import UserRenderer
 from rest_framework_simplejwt.tokens import RefreshToken
 from User.models import User
 from rest_framework.permissions import IsAuthenticated
 
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 
 
 def get_tokens_for_user(user):
     refresh = RefreshToken.for_user(user)
-    refresh['is_dmin'] = user.is_admin
-    print("Token Fetched => ", refresh.payload.items())
+    refresh['is_admin'] = user.is_admin
     return {
         'refresh': str(refresh),
         'access': str(refresh.access_token),
     }
 
+class UsersAPI(APIView):
+    renderer_classes = [UserRenderer]
+    # permission_classes = [IsAuthenticated, IsOwner, IsAdmin]
+
+    def get(self, request, *args, **kwargs):
+        try:
+            page = int(request.query_params.get("page", 1))
+            limit = int(request.query_params.get("limit", 9))
+            if page < 1 or limit < 1:
+                raise ValueError
+
+            if ('user_id' in request.query_params) :
+                print("Inside if")
+                users = User.objects.filter(
+                    id=request.query_params.get("user_id"),
+                )
+            else:
+                print("Inside else")
+                users = User.objects.all().order_by("-created_at")[
+                    ((page - 1) * limit) : ((page - 1) * limit + limit)
+                ]
+            all_users = UserInfoSerializer(users, many=True).data
+
+            total_users = User.objects.count()
+
+            print("outside")
+            month_ago = datetime.now() - relativedelta(months=1)
+
+            total_month_users = User.objects.filter(created_at__gte=month_ago).count()
+
+            return Response(
+                {
+                    "type": "success",
+                    "message": "Post Fetched",
+                    "data": {
+                        "all_users": all_users,
+                        "page": page,
+                        "limit": limit,
+                        "total_users": total_users,
+                        "total_month_users": total_month_users,
+                    },
+                }
+            )
+        except ValueError:
+            return Response(
+                {
+                    "type": "error",
+                    "message": "Page and limit must be positive integers.",
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        except Exception as e:
+            print(e)
+            return Response(
+                {"type": "error", "message": "Something went wrong." },
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
 
 # Create your views here.
 
@@ -103,10 +161,12 @@ class UserProfileUpdateAPI(APIView):
 
 class UserDeleteAPI(APIView):
     renderer_classes = [UserRenderer]
-    permission_classes = [IsAuthenticated, IsOwner]
+    permission_classes = [IsAuthenticated]
     
     def delete(self, request, id):
         try:
+            if (not request.user.is_admin and not request.user.id != id):
+                return Response({'type': 'error', 'message': "Unauthorized"}, status=status.HTTP_401_UNAUTHORIZED)
             user = User.objects.get(id=id)
             serializer = UserDeleteSerializer()
             serializer.delete(user)
