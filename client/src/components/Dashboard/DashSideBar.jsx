@@ -29,7 +29,7 @@ function DashSideBar({ tab }) {
 							icon={HiDocumentText}
 							as={"div"}
 						>
-							Profile
+							Posts
 						</Sidebar.Item>
 					</Link>}
 					<Link to={"/dashboard?tab=signout"}>

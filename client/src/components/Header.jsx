@@ -45,7 +45,7 @@ function Header() {
 					className="w-12 h-10 hidden sm:inline"
 					onClick={() => dispatch(toggleTheme())}
 				>
-					{theme == 'light' ? (<FaSun />) : (<FaMoon />)}
+					{theme == 'dark' ? (<FaSun />) : (<FaMoon />)}
 				</Button>
 				{currentUser ? (
 					<Dropdown arrowIcon={false} inline label={

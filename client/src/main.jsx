@@ -10,7 +10,9 @@ ReactDOM.createRoot(document.getElementById("root")).render(
 	<PersistGate persistor={persistor}>
 		<Provider store={store}>
 			<ThemeProvider>
-				<App />
+				<div className="min-h-screen dark:bg-slate-900">
+					<App />
+				</div>
 			</ThemeProvider>
 		</Provider>
 	</PersistGate>

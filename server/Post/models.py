@@ -12,8 +12,7 @@ class PostManager(models.Manager):
                if ('image' in data) :
                     return self.create(title=data['title'], content=data['content'], category=data['category'], image=data['image'], slug=slug, user=data['user'])
                else:
-                    return self.create(title=data['title'], content=data['content'], category=data['category'], slug=slug, user=data['user'])
-         
+                    return self.create(title=data['title'], content=data['content'], category=data['category'], slug=slug, user=data['user'])         
 
 
 # Create your models here.
@@ -28,3 +27,6 @@ class Post(models.Model):
      updated_at = models.DateTimeField(auto_now=True)
 
      objects = PostManager()
+
+     def set_slug(self, title):
+          self.slug = re.sub('r[^a-zA-Z0-9-]', '', "-".join(title.split(' '))).lower()

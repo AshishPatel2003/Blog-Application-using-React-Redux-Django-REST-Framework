@@ -9,7 +9,7 @@ import { useSelector } from "react-redux";
 
 function CreatePost() {
 
-    const { accessToken} = useSelector(state => state.user)
+    const { currentUser, accessToken} = useSelector(state => state.user)
 
     const [file, setFile] = useState(null);
     const [imageUploadProgress, setImageUploadProgress] = useState(0);
@@ -56,7 +56,7 @@ function CreatePost() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const res = await fetch(import.meta.env.VITE_SERVER_URL + '/api/post/create', {
+            const res = await fetch(import.meta.env.VITE_SERVER_URL + `/api/user/${currentUser.id}/post/create`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

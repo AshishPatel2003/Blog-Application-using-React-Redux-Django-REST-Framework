@@ -80,7 +80,7 @@ function DashProfile() {
 			() => {
 				getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
 					setImageFileURL(downloadURL);
-					setFormData({ ...formData, photoURL: downloadURL });
+					setFormData({ ...formData, image: downloadURL });
 					setImageFileUploadStatus(false);
 				});
 			}
