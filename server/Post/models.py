@@ -22,7 +22,7 @@ class Post(models.Model):
      category = models.SlugField()
      image= models.TextField(default="https://www.hostinger.com/tutorials/wp-content/uploads/sites/2/2021/09/how-to-write-a-blog-post.png")
      user = models.ForeignKey(User, on_delete=models.CASCADE)
-     slug = models.SlugField()
+     slug = models.SlugField(max_length=255)
      created_at = models.DateTimeField(auto_now_add=True)
      updated_at = models.DateTimeField(auto_now=True)
 

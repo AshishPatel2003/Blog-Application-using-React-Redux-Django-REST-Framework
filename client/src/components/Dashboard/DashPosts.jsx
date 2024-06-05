@@ -22,7 +22,7 @@ function DashPosts() {
 			try {
 				const res = await fetch(
 					import.meta.env.VITE_SERVER_URL +
-						`/api/user/${currentUser.id}/posts?page=${page}&limit=${limit}`
+						`/api/posts?page=${page}&limit=${limit}&user_id=${currentUser.id}`
 				);
 				const data = await res.json();
 				if (res.ok) {
@@ -44,7 +44,7 @@ function DashPosts() {
 		try {
 			const res = await fetch(
 				import.meta.env.VITE_SERVER_URL +
-					`/api/${currentUser.id}/posts?page=${startIndex}&limit=${limit}`,
+					`/api/posts?page=${startIndex}&limit=${limit}&user_id=${currentUser.id}`,
 				{
 					method: "GET",
 					headers: {
@@ -119,7 +119,7 @@ function DashPosts() {
 										).toLocaleDateString()}
 									</Table.Cell>
 									<Table.Cell>
-										<Link to={`/posts/${post.slug}`}>
+										<Link to={`/post/${post.slug}`}>
 											<img
 												src={post.image}
 												alt={post.title}
@@ -129,7 +129,7 @@ function DashPosts() {
 									</Table.Cell>
 									<Table.Cell>
 										<Link
-											to={`/posts/${post.slug}`}
+											to={`/post/${post.slug}`}
 											className="font-medium text-gray-900 dark:text-white"
 										>
 											{post.title}

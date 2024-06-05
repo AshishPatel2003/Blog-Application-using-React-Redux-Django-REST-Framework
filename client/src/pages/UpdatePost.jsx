@@ -21,7 +21,6 @@ function UpdatePost() {
 	const [imageUploadError, setImageUploadError] = useState(null);
 	const [formData, setFormData] = useState({});
 	const [publishError, setPublishError] = useState(null);
-
 	const { postId } = useParams();
 
 	const navigate = useNavigate();
@@ -31,7 +30,7 @@ function UpdatePost() {
 			const fetchPost = async () => {
 				const res = await fetch(
 					import.meta.env.VITE_SERVER_URL +
-						`/api/user/${currentUser.id}/posts?post_id=${postId}`,
+						`/api/posts?post_id=${postId}`,
 					{
 						method: "GET",
 						headers: {
@@ -95,6 +94,7 @@ function UpdatePost() {
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
+		console.log(formData)
 		try {
 			const res = await fetch(
 				import.meta.env.VITE_SERVER_URL +
@@ -203,8 +203,13 @@ function UpdatePost() {
 					placeholder="Write something..."
 					className="h-72 mb-12"
                     value={formData.content}
-					onChange={(value) => {
-						setFormData({ ...formData, content: value });
+					onChange={(e) => {
+						if (formData?.title) {
+							setFormData({
+								...formData,
+								content: e
+							});
+						}
 					}}
 				/>
 				<Button type="submit" gradientDuoTone={"purpleToPink"}>

@@ -18,10 +18,11 @@ from rest_framework.permissions import IsAuthenticated
 class PostsAPI(APIView):
     renderer_classes = [UserRenderer]
 
-    def get(self, request, id, *args, **kwargs):
+    def get(self, request, *args, **kwargs):
         try:
             page = int(request.query_params.get("page", 1))
-            limit = int(request.query_params.get("limit", 9))
+            limit = int(request.query_params.get("limit", 9));
+            user_id = int(request.query_params.get("user_id", -1))
             if page < 1 or limit < 1:
                 raise ValueError
 
@@ -32,12 +33,17 @@ class PostsAPI(APIView):
                 posts = Post.objects.filter(
                     id=request.query_params.get("post_id"),
                 )
+            elif 'slug' in kwargs:
+                print("Slug time")
+                posts = Post.objects.filter(
+                    slug=kwargs.get('slug'),
+                )
             else:
                 print("Inside else")
                 posts = Post.objects.filter(
                     title__icontains=search_query,
                     content__icontains=search_query,
-                    user_id=id,
+                    user_id=user_id,
                 ).order_by("-created_at")[
                     ((page - 1) * limit) : ((page - 1) * limit + limit)
                 ]

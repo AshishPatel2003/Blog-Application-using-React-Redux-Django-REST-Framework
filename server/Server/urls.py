@@ -32,7 +32,8 @@ urlpatterns = [
     path('api/users', user_views.UsersAPI.as_view()),
 
     # -------- Post Routes --------
-    path('api/user/<int:id>/posts', post_views.PostsAPI.as_view()),
+    path('api/posts', post_views.PostsAPI.as_view()),
+    path('api/post/<str:slug>', post_views.PostsAPI.as_view()),
     path('api/user/<int:id>/post/create', post_views.PostCreateAPI.as_view()),
     path('api/user/<int:id>/post/<int:post_id>', post_views.PostAPI.as_view()),
     path('api/user/<int:id>/post/<int:post_id>', post_views.PostAPI.as_view()),

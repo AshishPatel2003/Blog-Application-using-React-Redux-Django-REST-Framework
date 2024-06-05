@@ -17,7 +17,6 @@ def get_tokens_for_user(user):
     refresh = RefreshToken.for_user(user)
     refresh['is_admin'] = user.is_admin
     return {
-        'refresh': str(refresh),
         'access': str(refresh.access_token),
     }
 
@@ -165,7 +164,7 @@ class UserDeleteAPI(APIView):
     
     def delete(self, request, id):
         try:
-            if (not request.user.is_admin and not request.user.id != id):
+            if (request.user.is_admin == False and request.user.id != id):
                 return Response({'type': 'error', 'message': "Unauthorized"}, status=status.HTTP_401_UNAUTHORIZED)
             user = User.objects.get(id=id)
             serializer = UserDeleteSerializer()

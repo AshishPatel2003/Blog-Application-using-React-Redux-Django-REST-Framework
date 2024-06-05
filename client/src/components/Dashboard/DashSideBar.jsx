@@ -34,7 +34,7 @@ function DashSideBar({ tab }) {
 					</Link>}
 					{currentUser.is_admin && <Link to={"/dashboard?tab=users"}>
 						<Sidebar.Item
-							active={tab === "posts"}
+							active={tab === "users"}
 							icon={HiOutlineUserGroup}
 							as={"div"}
 						>
